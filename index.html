@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Steam Wallet Store</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f4f4;
+}
+
+header{
+background:#1b2838;
+color:white;
+padding:20px;
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+nav{
+background:#2a475e;
+padding:10px;
+}
+
+nav a{
+color:white;
+margin-right:15px;
+text-decoration:none;
+}
+
+main{
+padding:30px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:6px;
+text-align:center;
+cursor:pointer;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:80px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="icon.png" width="40">
+<h1>Ryan Voucher Store</h1>
+</header>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="promo.html">Promo</a>
+<a href="history.html">History</a>
+<a href="CP.html">Contact</a>
+</nav>
+
+<main>
+
+<h2>Pilih Voucher Steam Wallet</h2>
+
+<div class="products">
+
+<div class="card" onclick="location.href='beli.html'">
+<img src="icon.png">
+<h3>Rp40.000</h3>
+<p>Rp43.000</p>
+</div>
+
+<div class="card" onclick="location.href='beli.html'">
+<img src="icon.png">
+<h3>Rp150.000</h3>
+<p>Rp152.000</p>
+</div>
+
+<div class="card" onclick="location.href='beli.html'">
+<img src="icon.png">
+<h3>Rp300.000</h3>
+<p>Rp302.000</p>
+</div>
+
+<div class="card" onclick="location.href='beli.html'">
+<img src="icon.png">
+<h3>Rp500.000</h3>
+<p>Rp501.500</p>
+</div>
+
+</div>
+
+</main>
+
+<footer style="text-align:center;padding:15px;background:#1b2838;color:white">
+Sistem Penjualan Steam Wallet
+</footer>
+
+</body>
+</html>
