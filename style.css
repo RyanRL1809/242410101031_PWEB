@@ -1,0 +1,445 @@
+body{
+margin:0;
+padding-top:1px;
+font-family:Arial, sans-serif;
+}
+
+header{
+background:#1b2838;
+color:white;
+padding:20px;
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+nav{
+background:#2a475e;
+padding:10px;
+}
+
+nav a{
+color:white;
+margin-right:15px;
+text-decoration:none;
+}
+
+/* Navbar */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1b2838;
+padding:15px 30px;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+z-index:1000;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+color:white;
+}
+
+.menu{
+display:flex;
+list-style:none;
+gap:20px;
+margin:0;
+padding:0;
+}
+
+.menu a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* Mobile View */
+@media (max-width:768px){
+
+.navbar{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.menu{
+flex-direction:column;
+gap:10px;
+margin-top:10px;
+}
+
+}
+
+/* Hero */
+html{
+scroll-behavior:smooth;
+}
+
+.buy-now-btn{
+display:inline-block;
+margin-top:20px;
+padding:14px 28px;
+background:#5c7e10;
+color:#1b2838;
+text-decoration:none;
+font-weight:bold;
+font-size:16px;
+border-radius:8px;
+transition:0.3s;
+}
+
+.buy-now-btn:hover{
+background:#8fd6ff;
+transform:translateY(-2px);
+}
+
+/* Filter */
+main{
+padding: 30px;
+}
+
+.filter{
+width:250px;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+.voucher{
+flex:1;
+}
+
+.filter label{
+display:block;
+margin-bottom:10px;
+cursor:pointer;
+}
+
+.filter input{
+margin-right:8px;
+transform:scale(1.2);
+}
+
+/* HALAMAN INDEX */
+
+.home-page main{
+padding:30px;
+}
+
+.produk{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+padding:40px;
+}
+
+.card{
+display:block;
+background:white;
+padding:25px;
+border-radius:12px;
+text-align:center;
+text-decoration:none;
+color:black;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+transition:0.25s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 15px 25px rgba(0,0,0,0.2);
+}
+
+.card:active{
+transform:scale(0.96);
+box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+.card img{
+width:90px;
+margin-bottom:10px;
+transition:0.3s;
+}
+
+.card:hover img{
+transform:scale(1.1);
+}
+
+.layout-atas{
+display:flex;
+gap:30px;
+}
+
+/* Responsive Grid */
+@media (max-width:1024px){
+.produk{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+@media (max-width:600px){
+.produk{
+grid-template-columns:1fr;
+}
+}
+
+/* Hero */
+.hero{
+background:linear-gradient(to right,#1b2838,#2a475e);
+color:white;
+padding:80px 40px;
+}
+
+.hero h1{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+opacity:0.9;
+}
+/* ===== SEARCH FORM ===== */
+
+.search-box{
+padding:40px;
+background:white;
+margin:30px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+.search-form{
+display:flex;
+gap:10px;
+}
+
+.search-form input{
+flex:1;
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+outline:none;
+transition:0.3s;
+}
+
+.search-form input:focus{
+border:1px solid #1b2838;
+box-shadow:0 0 8px rgba(27,40,56,0.4);
+}
+
+.search-form button{
+background:#1b2838;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:6px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.search-form button:hover{
+background:#2a475e;
+}
+/* Footer */
+.footer{
+background:#1b2838;
+color:white;
+padding:40px 20px;
+margin-top:40px;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:30px;
+max-width:1200px;
+margin:auto;
+}
+
+@media (max-width:768px){
+.footer-container{
+grid-template-columns:1fr;
+text-align:center;
+}
+}
+
+/* ================= HALAMAN BELI ================= */
+
+.beli-page main{
+display:flex;
+flex-direction:column;
+gap:30px;
+padding:30px;
+}
+
+.upper-section{
+display:flex;
+gap:20px;
+}
+
+.beli-page form{
+flex:3;
+}
+
+.beli-page aside{
+flex:1;
+}
+
+.upper-section{
+display:flex;
+gap:30px;
+margin-top:20px;
+}
+
+/* KOTAK FORM */
+.form-box{
+flex:3;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* KOTAK STATISTIK */
+.statistik-box{
+flex:1;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+/* ================= FORM ================= */
+
+input,select,textarea{
+width:100%;
+padding:8px;
+margin-bottom:10px;
+}
+
+.btn-beli{
+width:100%;
+margin-top:15px;
+padding:14px;
+background:#66c0f4;
+color:#1b2838;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:0.25s;
+box-shadow:0 5px 12px rgba(0,0,0,0.2);
+}
+
+.btn-beli:hover{
+background:#8fd6ff;
+transform:translateY(-2px);
+}
+
+.btn-beli:active{
+transform:scale(0.97);
+}
+
+.form-box h2{
+font-size:26px;
+margin-bottom:6px;
+color:#1b2838;
+font-weight:600;
+}
+
+.form-box p{
+font-size:14px;
+color:#6b7280;
+margin-bottom:25px;
+}
+
+.form-box{
+flex:3;
+background:#ffffff;
+padding:35px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+border-top:5px solid #1b2838;
+}
+
+.form-box label{
+font-size:14px;
+color:#555;
+display:block;
+margin-bottom:4px;
+margin-top:10px;
+}
+
+/* Statistik Box */
+
+.statistik-box{
+flex:1;
+background:#ffffff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+border-top:5px solid #2a475e;
+}
+
+.statistik-box h3{
+margin-top:10px;
+margin-bottom:20px;
+color:#1b2838;
+}
+
+.statistik-box p{
+background:#f1f5f9;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+font-size:14px;
+}
+
+/* ================= TABLE ================= */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:30px;
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* Header */
+th{
+background:#1b2838;
+color:white;
+padding:15px;
+text-align:center;
+font-size:15px;
+}
+
+/* Isi tabel */
+td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+
+/* Zebra striping */
+tr:nth-child(even){
+background:#f2f2f2;
+}
+
+/* Hover effect */
+tr:hover{
+background:#e8f0ff;
+transition:0.2s;
+}
