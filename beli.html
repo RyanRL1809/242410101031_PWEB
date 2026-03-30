@@ -3,210 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <title>Form Pembelian Voucher</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:0;
-background:#f2f2f2;
-}
-
-header{
-background:#1b2838;
-color:white;
-padding:20px;
-}
-
-nav{
-background:#2a475e;
-padding:10px;
-}
-
-nav a{
-color:white;
-margin-right:15px;
-text-decoration:none;
-}
-
-main{
-display:flex;
-gap:20px;
-padding:20px;
-}
-
-section{
-border:1px solid #000;
-flex:3;
-background:white;
-padding:50px;
-}
-
-aside{
-border:1px solid #000;
-flex:1;
-background:white;
-padding:20px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:10px;
-text-align:center;
-}
-
-input,select,textarea{
-width:100%;
-padding:8px;
-margin-bottom:10px;
-}
-
-button{
-background:#5c7e10;
-color:white;
-padding:10px;
-border:none;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="beli-page">
 
-<header>
-<h1>Form Pembelian Steam Wallet</h1>
-</header>
+    <header>
+        <nav class="navigation">
+            <div class="logo">
+            <img src="icon.png" width="40">
+            <h1>Ryan Voucher Store</h1>
+            </div>
 
-<nav>
-<a href="index.html">Home</a>
-</nav>
+            <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">History</a></li>
+            <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<main>
+    <main>
+        <section class="upper-section">
+            <dif class="form-box">
+                <h2>Form Pembelian Voucher</h2>
+                <p>Isi data dengan benar untuk melanjutkan transaksi</p>
 
-<section>
+                <form>
+                    <label>Email</label>
+                    <input type="text">
+    
+                    <label>Nama Voucher</label>
+                    <input type="text">
+    
+                    <label>Kategori</label>
+                    <select>
+                    <option>Steam Wallet</option>
+                    </select>
+    
+                    <label>Jumlah</label>
+                    <input type="number">
+    
+                    <label>Harga</label>
+                    <input type="number">
+    
+                    <label>Kode Promo</label>
+                    <input type="text">
+    
+                    <label>Metode Pembayaran</label>
+                    <select>
+                    <option>QRIS</option>
+                    <option>E-wallet</option>
+                    <option>Virtual Account</option>
+                    <option>Minimarket</option>
+                    <option>Koin Toko</option>
+                    </select>
+    
+                    <label>Detail Kontak</label>
+                    <input type="text">
+    
+                    <button class="btn-beli">Beli Sekarang</button>
+                </form>
+            </dif>
 
-<h2>Form Input Pembelian</h2>
+            <div class="statistik-box">
+                <div style="text-align:center;">
+                <img src="icon.png" width="200">
+                <h3>Statistik</h3>
+                </div>
 
-<form>
+                <p>Total Produk : 4</p>
+                <p>Total Stok : 100</p>
+                <p>Produk Terlaris : Rp150.000</p>
+            </div>
+        </section>
+        
+        <section class="tabel-pembelian">
+            <h2>Top Pembeli</h2>
+            <table>
+                <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kategori</th>
+                <th>Jumlah</th>
+                <th>Total Pembelian</th>
+                </tr>
 
-<label>Email</label>
-<input type="text">
+                <tr>
+                <td>1</td>
+                <td>Rayn</td>
+                <td>Steam Wallet</td>
+                <td>30</td>
+                <td>1500000</td>
+                </tr>
 
-<label>Nama Voucher</label>
-<input type="text">
+                <tr>
+                <td>2</td>
+                <td>Sight</td>
+                <td>Steam Wallet</td>
+                <td>15</td>
+                <td>1300000</td>
+                </tr>
 
-<label>Kategori</label>
-<select>
-<option>Steam Wallet</option>
-</select>
+                <tr>
+                <td>3</td>
+                <td>Bless</td>
+                <td>Steam Wallet</td>
+                <td>11</td>
+                <td>1000000</td>
+                </tr>
 
-<label>Jumlah</label>
-<input type="number">
+                <tr>
+                <td>4</td>
+                <td>MJ</td>
+                <td>Steam Wallet</td>
+                <td>8</td>
+                <td>750000</td>
+                </tr>
 
-<label>Harga</label>
-<input type="number">
+                <tr>
+                <td>5</td>
+                <td>Griz</td>
+                <td>Steam Wallet</td>
+                <td>5</td>
+                <td>500000</td>
+                </tr>
+            </table>
+        </section>
+    </main>
 
-<label>Kode Promo</label>
-<input type="text">
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-note">
+                <h3>Steam Wallet Store</h3>
+                <p>Website pembelian voucher Steam Wallet terpercaya</p>
+            </div>
 
-<label>Metode Pembayaran</label>
-<select>
-    <option>QRIS</option>
-    <option>E-wallet</option>
-    <option>Virtual Account</option>
-    <option>minimarket</option>
-    <option>Koin Toko</option>
-</select>
+            <div class="footer-note">
+                <h3>Menu</h3>
+                <p>Home</p>
+                <p>Voucher</p>
+                <p>Pembelian</p>
+                <p>Statistik</p>
+            </div>
 
-<label>Detail Kontak</label>
-<input type="text">
+            <div class="footer-note">
+                <h3>Kontak</h3>
+                <p>Instagram: @ryansteamstore</p>
+                <p>WhatsApp: 08123456789</p>
+                <p>Email: ryansteamstore@gmail.com</p>
+            </div>
 
-<button>Beli</button>
-
-</form>
-
-</section>
-
-<aside>
-<div style="text-align:center;">
-    <img src="icon.png" width="300">
-<h3>Statistik</h3>
-</div>
-
-
-<p>Total Produk : 4</p>
-<p>Total Stok : 100</p>
-<p>Produk Terlaris : Rp150.000</p>
-
-</aside>
-
-</main>
-
-<section class="Top Pembeli">
-
-<h2>Top Pembeli</h2>
-
-<table>
-
-<tr>
-<th>No</th>
-<th>Nama</th>
-<th>Kategori</th>
-<th>Jumlah</th>
-<th>Total Pembelian</th>
-</tr>
-
-<tr>
-<td>1</td>
-<td>Rayn</td>
-<td>Steam Wallet</td>
-<td>30</td>
-<td>1500000</td>
-</tr>
-
-<tr>
-<td>2</td>
-<td>Sight</td>
-<td>Steam Wallet</td>
-<td>15</td>
-<td>1300000</td>
-</tr>
-
-<tr>
-<td>3</td>
-<td>Bless</td>
-<td>Steam Wallet</td>
-<td>11</td>
-<td>1000000</td>
-</tr>
-
-<tr>
-<td>4</td>
-<td>MJ</td>
-<td>Steam Wallet</td>
-<td>8</td>
-<td>750000</td>
-</tr>
-
-<tr>
-<td>5</td>
-<td>Griz</td>
-<td>Steam Wallet</td>
-<td>5</td>
-<td>500000</td>
-</tr>
-
-</table>
-</section>
-<footer style="text-align:center;background:#1b2838;color:white;padding:15px">
-Ryan Voucher Store
-</footer>
+        </div>
+    </footer>
 
 </body>
 </html>
