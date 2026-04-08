@@ -1,17 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Pembelian</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+    <header>
+        <nav class="navigation">
+            <div class="logo">
+                <img src="icon.png" width="40">
+                <h1>Ryan Voucher Store</h1>
+            </div>
+
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="#" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="history-page">
+        <h2>Riwayat Pembelian</h2>
+        <p>Lihat semua transaksi yang telah dilakukan</p>
+        <div class="search-box">
+            <input type="text" placeholder="Cari email / voucher...">
+            <button>Cari</button>
+        </div>
+        
+        <div class="filter-box-history">
+            <h3>Filter</h3>
+            <label><input type="checkbox"> Success </label>
+            <label><input type="checkbox"> Pending </label>
+            <label><input type="checkbox"> Failed </label>
+        </div>
+        
+        <div class="history-layout">
+            <div class="history-content">
+                <table>
+                    <tr>
+                        <th>No</th>
+                        <th>Email</th>
+                        <th>Voucher</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>rayn@email.com</td>
+                        <td>Steam 45K</td>
+                        <td>2</td>
+                        <td>Rp90.000</td>
+                        <td><span class="status success">Success</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>sight@email.com</td>
+                        <td>Steam 90K</td>
+                        <td>1</td>
+                        <td>Rp90.000</td>
+                        <td><span class="status pending">Pending</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td>bless@email.com</td>
+                        <td>Steam 120K</td>
+                        <td>1</td>
+                        <td>Rp120.000</td>
+                        <td><span class="status failed">Failed</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-note">
+                <h3>Steam Wallet Store</h3>
+                <p>Website pembelian voucher Steam Wallet terpercaya</p>
+            </div>
+
+            <div class="footer-note">
+                <h3>Menu</h3>
+                <a href="index.html">Home</a>
+                <a href="history.html">History</a>
+                <a href="help.html">Help</a>
+            </div>
+
+            <div class="footer-note">
+                <h3>Kontak</h3>
+                <p>Instagram: @ryansteamstore</p>
+                <p>WhatsApp: 08123456789</p>
+                <p>Email: ryansteamstore@gmail.com</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
-
-<nav>
-<a href="index.html">Home</a>
-<a href="history.html">History</a>
-<a href="CP.html">Contact</a>
-</nav>

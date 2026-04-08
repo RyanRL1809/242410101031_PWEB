@@ -9,20 +9,19 @@
 <body class="home-page"> 
 
 <header>
-<nav class="navigation">
+    <nav class="navigation">
+        <div class="logo">
+            <img src="icon.png" width="40">
+            <h1>Ryan Voucher Store</h1>
+        </div>
 
-<div class="logo">
-    <img src="icon.png" width="40">
-    <h1>Ryan Voucher Store</h1>
-</div>
-
-<ul class="menu">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="history.html">History</a></li>
-    <li><a href="CP.html">Contact</a></li>
-</ul>
-
-</nav>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="help.html">Help</a></li>
+            <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+    </nav>
 </header>
 
 <section class="hero">
@@ -90,13 +89,13 @@
         </div>
     </section>
 
-    <aside class="filter">
+    <div class="filter-box">
         <h3>Filter Harga</h3>
-        <label><input type="checkbox"> 0 - 50k </label><br>
-        <label><input type="checkbox"> 50k - 100k </label><br>
-        <label><input type="checkbox"> 100k - 300k </label><br>
-        <label><input type="checkbox"> Lebih Dari 300k </label><br>
-    </aside>
+        <label><input type="checkbox"> All</label>
+        <label><input type="checkbox"> < 100K</label>
+        <label><input type="checkbox"> 100K - 300K</label>
+        <label><input type="checkbox"> > 300K</label>
+    </div>
 </section>
 
 <section class="table-section">
@@ -162,10 +161,9 @@
 
         <div class="footer-note">
             <h3>Menu</h3>
-            <p>Home</p>
-            <p>Voucher</p>
-            <p>Pembelian</p>
-            <p>Statistik</p>
+            <a href="index.html">Home</a>
+            <a href="history.html">History</a>
+            <a href="help.html">Help</a>
         </div>
 
         <div class="footer-note"> 
