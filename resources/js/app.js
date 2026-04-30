@@ -1,146 +1,139 @@
-let dataBarang = JSON.parse(localStorage.getItem("barang")) || [];
-let editIndex = -1;
+// ─────────────────────────────────────────
+// Cek dulu apakah halaman ini punya #appData
+// Biar nggak error di halaman lain
+// ─────────────────────────────────────────
+const appDataEl = document.getElementById("appData");
+if (appDataEl) {
 
-const form = document.getElementById("formBarang");
-const statistik = document.getElementById("statistik");
+    // ─────────────────────────────────────
+    // AMBIL DATA DARI BLADE
+    // ─────────────────────────────────────
+    const dataBarang = JSON.parse(appDataEl.dataset.produk);
+    const urlBeli    = appDataEl.dataset.urlBeli;
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    // ─────────────────────────────────────
+    // TANGKAP ELEMEN
+    // ─────────────────────────────────────
+    const searchInput      = document.getElementById("searchInput");
+    const filterStok       = document.getElementById("filterStok");
+    const sortOrder        = document.getElementById("sortOrder");
+    const productContainer = document.getElementById("productContainer");
+    const productCount     = document.getElementById("productCount");
 
-    const kode = document.getElementById("kode").value.trim();
-    const nama = document.getElementById("nama").value.trim();
-    const kategori = document.getElementById("kategori").value;
-    const stok = document.getElementById("stok").value;
-    const harga = document.getElementById("harga").value;
-    const tanggal = document.getElementById("tanggal").value;
+    // ─────────────────────────────────────
+    // HELPER
+    // ─────────────────────────────────────
+    const esc = (str) => String(str ?? "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-    if (!kode || !nama || !kategori || !stok || !harga || !tanggal) {
-        alert("Semua field wajib diisi!");
-        return;
-    }
-
-    if (stok <= 0) {
-        alert("Stok harus lebih dari 0");
-        return;
-    }
-
-    if (harga <= 0) {
-        alert("Harga harus lebih dari 0");
-        return;
-    }
-
-    const barangBaru = {
-        kode,
-        nama,
-        kategori,
-        stok: Number(stok),
-        harga: Number(harga),
-        tanggal
+    const formatRp = (angka) => {
+        const n = Number(angka);
+        return isNaN(n) ? "0" : n.toLocaleString("id-ID");
     };
 
-    if (editIndex === -1) {
-        dataBarang.push(barangBaru);
-    } else {
-        dataBarang[editIndex] = barangBaru;
-        editIndex = -1;
-    }
+    // ─────────────────────────────────────
+    // TEMPLATE KARTU
+    // ─────────────────────────────────────
+    const buatKartu = (item) => `
+        <div class="group bg-white rounded-4xl p-6 border border-gray-50 shadow-sm
+                    hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300
+                    flex flex-col justify-between">
 
-    localStorage.setItem("barang", JSON.stringify(dataBarang));
-    render();   
+            <div class="text-center mb-6">
+                <div class="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center
+                            mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png"
+                         class="w-10" alt="Steam">
+                </div>
+                <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                    ${esc(item.kategori)}
+                </p>
+                <h4 class="text-xl font-black text-[#1b2838] tracking-tighter">
+                    Rp${formatRp(item.harga)}
+                </h4>
+            </div>
 
-    console.log("DATA SEKARANG:", dataBarang);
-
-    alert("Data berhasil ditambahkan!");
-
-    form.reset();
-});
-
-const tableBody = document.getElementById("tableBody");
-
-const render = () => {
-    tableBody.innerHTML = "";
-
-    const keyword = searchInput.value.toLowerCase();
-    const kategori = filterKategori.value;
-
-    const filtered = dataBarang.filter(item => {
-        const cocokSearch =
-            item.nama.toLowerCase().includes(keyword) ||
-            item.kode.toLowerCase().includes(keyword);
-
-        const cocokKategori =
-            kategori === "" || item.kategori === kategori;
-
-        return cocokSearch && cocokKategori;
-    });
-
-    filtered.forEach((item, index) => {
-        tableBody.innerHTML += `
-            <tr>
-                <td>${item.kode}</td>
-                <td>${item.nama}</td>
-                <td>${item.kategori}</td>
-                <td>${item.stok}</td>
-                <td>${item.harga}</td>
-                <td>${item.tanggal}</td>
-                <td>
-                    <button class="btn-edit" onclick="edit(${index})">Edit</button>
-                    <button class="btn-delete" onclick="hapus(${index})">Hapus</button>
-                </td>
-            </tr>
-        `;
-    });
-
-    // 🔥 STATISTIK (PINDAH KE SINI)
-    const totalItem = dataBarang.length;
-
-    const totalNilai = dataBarang.reduce((total, item) => {
-        return total + (item.harga * item.stok);
-    }, 0);
-
-    const stokMenipis = dataBarang.filter(item => item.stok < 5).length;
-
-    statistik.innerHTML = `
-        <div style="text-align:center;">
-            <img src="icon.png" width="200">
-            <h3>Statistik</h3>
+            <div class="border-t border-gray-50 pt-4 flex items-center justify-between">
+                <div>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Saldo</p>
+                    <p class="text-md font-black text-[#5c7e10]">${esc(item.nama_barang)}</p>
+                </div>
+                <a href="${urlBeli}/${esc(item.id)}"
+                   class="bg-gray-100 group-hover:bg-[#1b2838] text-gray-400
+                          group-hover:text-white p-3 rounded-xl transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                              d="M12 4v16m8-8H4"/>
+                    </svg>
+                </a>
+            </div>
         </div>
-
-        <p>📦 Total Item: ${totalItem}</p>
-        <p>💰 Total Nilai: Rp${totalNilai}</p>
-        <p>⚠️ Stok Menipis (<5): ${stokMenipis}</p>
     `;
-};
 
-const hapus = (index) => {
-    const konfirmasi = confirm("Yakin mau hapus data ini?");
-    
-    if (konfirmasi) {
-        dataBarang.splice(index, 1);
+    // ─────────────────────────────────────
+    // MAIN RENDER
+    // ─────────────────────────────────────
+    const render = () => {
+        const keyword    = searchInput.value.toLowerCase().trim();
+        const hargaRange = document.querySelector(".filterHarga:checked")?.value ?? "Semua Harga";
+        const stokOnly   = filterStok.checked;
+        const sort       = sortOrder.value;
 
-        localStorage.setItem("barang", JSON.stringify(dataBarang));
+        let filtered = dataBarang.filter(item => {
+            const cocokSearch =
+                item.nama_barang.toLowerCase().includes(keyword) ||
+                item.kode_barang.toLowerCase().includes(keyword) ||
+                String(item.harga).includes(keyword);
 
+            let cocokHarga = true;
+            const harga = Number(item.harga);
+            if      (hargaRange === "Dibawah Rp50.000")      cocokHarga = harga < 50000;
+            else if (hargaRange === "Rp50.000 - Rp200.000")  cocokHarga = harga >= 50000 && harga <= 200000;
+            else if (hargaRange === "Diatas Rp200.000")       cocokHarga = harga > 200000;
+
+            const cocokStok = stokOnly ? item.stok > 0 : true;
+
+            return cocokSearch && cocokHarga && cocokStok;
+        });
+
+        filtered.sort((a, b) =>
+            sort === "termurah"
+                ? Number(a.harga) - Number(b.harga)
+                : Number(b.harga) - Number(a.harga)
+        );
+
+        productCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+            productContainer.innerHTML = `
+                <div class="col-span-full py-20 text-center">
+                    <p class="text-gray-400 italic">Produk tidak ditemukan 😅</p>
+                </div>`;
+            return;
+        }
+
+        productContainer.innerHTML = filtered.map(buatKartu).join("");
+    };
+
+    // ─────────────────────────────────────
+    // EVENT LISTENERS
+    // ─────────────────────────────────────
+    searchInput.addEventListener("input", render);
+    filterStok.addEventListener("change", render);
+    sortOrder.addEventListener("change", render);
+    document.querySelectorAll(".filterHarga").forEach(r =>
+        r.addEventListener("change", render)
+    );
+
+    document.querySelector(".reset-filter")?.addEventListener("click", () => {
+        searchInput.value = "";
+        filterStok.checked = true;
+        sortOrder.value = "termurah";
+        document.querySelectorAll(".filterHarga")[0].checked = true;
         render();
-    }
-};
+    });
 
-const edit = (index) => {
-    const item = dataBarang[index];
-
-    document.getElementById("kode").value = item.kode;
-    document.getElementById("nama").value = item.nama;
-    document.getElementById("kategori").value = item.kategori;
-    document.getElementById("stok").value = item.stok;
-    document.getElementById("harga").value = item.harga;
-    document.getElementById("tanggal").value = item.tanggal;
-
-    editIndex = index;
-};
-
-const searchInput = document.getElementById("search");
-searchInput.addEventListener("input", render);
-
-const filterKategori = document.getElementById("filterKategori");
-filterKategori.addEventListener("change", render);
-
-render();
+    // Render pertama kali
+    render();
+}
