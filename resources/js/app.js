@@ -1,28 +1,13 @@
-// ─────────────────────────────────────────
-// Cek dulu apakah halaman ini punya #appData
-// Biar nggak error di halaman lain
-// ─────────────────────────────────────────
 const appDataEl = document.getElementById("appData");
 if (appDataEl) {
 
-    // ─────────────────────────────────────
-    // AMBIL DATA DARI BLADE
-    // ─────────────────────────────────────
     const dataBarang = JSON.parse(appDataEl.dataset.produk);
     const urlBeli    = appDataEl.dataset.urlBeli;
-
-    // ─────────────────────────────────────
-    // TANGKAP ELEMEN
-    // ─────────────────────────────────────
     const searchInput      = document.getElementById("searchInput");
     const filterStok       = document.getElementById("filterStok");
     const sortOrder        = document.getElementById("sortOrder");
     const productContainer = document.getElementById("productContainer");
     const productCount     = document.getElementById("productCount");
-
-    // ─────────────────────────────────────
-    // HELPER
-    // ─────────────────────────────────────
     const esc = (str) => String(str ?? "")
         .replace(/&/g, "&amp;").replace(/</g, "&lt;")
         .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -32,9 +17,6 @@ if (appDataEl) {
         return isNaN(n) ? "0" : n.toLocaleString("id-ID");
     };
 
-    // ─────────────────────────────────────
-    // TEMPLATE KARTU
-    // ─────────────────────────────────────
     const buatKartu = (item) => `
         <div class="group bg-white rounded-4xl p-6 border border-gray-50 shadow-sm
                     hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300
@@ -71,9 +53,6 @@ if (appDataEl) {
         </div>
     `;
 
-    // ─────────────────────────────────────
-    // MAIN RENDER
-    // ─────────────────────────────────────
     const render = () => {
         const keyword    = searchInput.value.toLowerCase().trim();
         const hargaRange = document.querySelector(".filterHarga:checked")?.value ?? "Semua Harga";
@@ -116,9 +95,6 @@ if (appDataEl) {
         productContainer.innerHTML = filtered.map(buatKartu).join("");
     };
 
-    // ─────────────────────────────────────
-    // EVENT LISTENERS
-    // ─────────────────────────────────────
     searchInput.addEventListener("input", render);
     filterStok.addEventListener("change", render);
     sortOrder.addEventListener("change", render);
@@ -134,6 +110,5 @@ if (appDataEl) {
         render();
     });
 
-    // Render pertama kali
     render();
 }

@@ -14,6 +14,8 @@
             <li><a href="{{ url('/produk-admin') }}" class="hover:text-white transition-colors">Admin</a></li>
             <li><a href="{{ url('/history') }}" class="hover:text-white transition-colors">History</a></li>
             <li><a href="{{ url('/help') }}" class="hover:text-white transition-colors">Help</a></li>
+            <li><a href="{{ url('/about') }}" class="hover:text-white transition-colors">about</a></li>
+            <li><a href="{{ url('/contact') }}" class="hover:text-white transition-colors">contact</a></li>
             <li><a href="#" class="bg-[#66c0f4] text-[#1b2838] px-5 py-2 rounded-md font-bold hover:bg-[#8fd6ff] hover:shadow-[0_0_15px_rgba(102,192,244,0.4)] transition-all">
                 Login
             </a></li>

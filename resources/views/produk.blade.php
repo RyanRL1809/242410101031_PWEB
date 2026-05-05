@@ -112,3 +112,14 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    console.log("Halaman Manajemen Produk Siap Bro!");
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+            console.log('Sedang menyimpan produk...');
+        });
+    });
+</script>
+@endpush

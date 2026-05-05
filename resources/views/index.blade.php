@@ -3,6 +3,65 @@
 @section('title', 'Steam Wallet Store | Home')
 
 @section('content')
+    <div class="p-6">
+        <h1 class="text-2xl font-bold mb-6">Dashboard Admin</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <x-stat_card 
+                judul="Total Produk" 
+                nilai="156" 
+                ikon="📦" 
+                warna="bg-blue-500 text-white" 
+            />
+            <x-stat_card 
+                judul="Pendapatan" 
+                nilai="Rp 4.5M" 
+                ikon="💰" 
+                warna="bg-green-500 text-white" 
+            />
+            <x-stat_card 
+                judul="Stok Menipis" 
+                nilai="12" 
+                ikon="⚠️" 
+                warna="bg-red-500 text-white" 
+            />
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <h2 class="text-lg font-bold mb-4">Daftar Mahasiswa (Data Dummy)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-gray-400 text-[10px] uppercase tracking-widest border-b border-gray-50">
+                            <th class="pb-4 px-2">Nama Mahasiswa</th>
+                            <th class="pb-4 px-2">NIM</th>
+                            <th class="pb-4 px-2">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        @forelse($data_mahasiswa as $mhs)
+                            <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition-all">
+                                <td class="py-4 px-2 font-bold text-[#1b2838]">{{ $mhs->nama }}</td>
+                                <td class="py-4 px-2 text-gray-500 font-mono">{{ $mhs->nim }}</td>
+                                <td class="py-4 px-2">
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase {{ $mhs->aktif ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+                                        {{ $mhs->aktif ? 'Aktif' : 'Cuti' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="py-10 text-center text-gray-400 italic">
+                                    Belum ada data mahasiswa di database nih bro... 
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <section class="relative bg-[#1b2838] overflow-hidden py-24">
         <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" 
              style="background: radial-gradient(circle at 50% 50%, #66c0f4 0%, transparent 70%);"></div>

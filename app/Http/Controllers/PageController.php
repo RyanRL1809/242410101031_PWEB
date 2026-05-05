@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    public function index() {
+        $data_mahasiswa = Mahasiswa::all(); 
+        return view('index', compact('data_mahasiswa'));
+    }
+
     public function home() {
         return view('index');
     }
@@ -49,4 +55,13 @@ class PageController extends Controller
     public function beli() {
         return view('beli');
     }
+
+    public function about() {
+    return view('about');
+    }
+
+    public function contact() {
+        return view('contact');
+    }
 }
+
