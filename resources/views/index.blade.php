@@ -3,65 +3,6 @@
 @section('title', 'Steam Wallet Store | Home')
 
 @section('content')
-    <div class="p-6">
-        <h1 class="text-2xl font-bold mb-6">Dashboard Admin</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <x-stat_card 
-                judul="Total Produk" 
-                nilai="156" 
-                ikon="📦" 
-                warna="bg-blue-500 text-white" 
-            />
-            <x-stat_card 
-                judul="Pendapatan" 
-                nilai="Rp 4.5M" 
-                ikon="💰" 
-                warna="bg-green-500 text-white" 
-            />
-            <x-stat_card 
-                judul="Stok Menipis" 
-                nilai="12" 
-                ikon="⚠️" 
-                warna="bg-red-500 text-white" 
-            />
-        </div>
-
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-            <h2 class="text-lg font-bold mb-4">Daftar Mahasiswa (Data Dummy)</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-gray-400 text-[10px] uppercase tracking-widest border-b border-gray-50">
-                            <th class="pb-4 px-2">Nama Mahasiswa</th>
-                            <th class="pb-4 px-2">NIM</th>
-                            <th class="pb-4 px-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm">
-                        @forelse($data_mahasiswa as $mhs)
-                            <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition-all">
-                                <td class="py-4 px-2 font-bold text-[#1b2838]">{{ $mhs->nama }}</td>
-                                <td class="py-4 px-2 text-gray-500 font-mono">{{ $mhs->nim }}</td>
-                                <td class="py-4 px-2">
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase {{ $mhs->aktif ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-                                        {{ $mhs->aktif ? 'Aktif' : 'Cuti' }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="py-10 text-center text-gray-400 italic">
-                                    Belum ada data mahasiswa di database nih bro... 
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <section class="relative bg-[#1b2838] overflow-hidden py-24">
         <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" 
              style="background: radial-gradient(circle at 50% 50%, #66c0f4 0%, transparent 70%);"></div>
@@ -100,35 +41,31 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @php
-                $terlaris = [
-                    ['nom' => '45.000', 'real' => '46.000', 'tag' => 'Paling Cuan'],
-                    ['nom' => '90.000', 'real' => '90.500', 'tag' => 'Best Value'],
-                    ['nom' => '120.000', 'real' => '122.000', 'tag' => 'Pro Choice'],
-                ];
-            @endphp
-
-            @foreach($terlaris as $v)
+            @forelse($produkRandom as $produk)
             <div class="group bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm hover:shadow-2xl hover:border-[#66c0f4]/30 transition-all duration-500 flex flex-col items-center text-center">
-                <span class="bg-gray-100 text-gray-400 text-[10px] font-black px-4 py-1 rounded-full mb-6 uppercase tracking-widest">{{ $v['tag'] }}</span>
+                <span class="bg-gray-100 text-gray-400 text-[10px] font-black px-4 py-1 rounded-full mb-6 uppercase tracking-widest">{{ $produk->kategori }}</span>
                 
                 <div class="relative mb-6">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png?_=20220611141426" class="w-24 transition-transform duration-700 group-hover:rotate-360 group-hover:scale-110">
                 </div>
 
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Nominal Saldo</h3>
-                <p class="text-4xl font-black text-[#1b2838] tracking-tighter mb-4">Rp{{ $v['nom'] }}</p>
+                <p class="text-4xl font-black text-[#1b2838] tracking-tighter mb-4">{{ $produk->nama_barang }}</p>
                 
                 <div class="w-full bg-gray-50 rounded-2xl p-4 mb-6">
                     <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Harga Nett</p>
-                    <p class="text-2xl font-black text-[#5c7e10]">Rp{{ $v['real'] }}</p>
+                    <p class="text-2xl font-black text-[#5c7e10]">Rp{{ number_format($produk->harga, 0, ',', '.') }}</p>
                 </div>
 
                 <a href="{{ url('/beli') }}" class="w-full bg-[#1b2838] hover:bg-[#66c0f4] text-white py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-[#66c0f4]/40">
                     Beli Sekarang!
                 </a>
             </div>
-            @endforeach
+            @empty
+            <div class="md:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 text-center text-gray-400 font-medium">
+                Belum ada produk di database.
+            </div>
+            @endforelse
         </div>
     </section>
 

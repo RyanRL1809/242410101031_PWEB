@@ -3,45 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
-use App\Models\Mahasiswa;
-use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
     public function index() {
-        $data_mahasiswa = Mahasiswa::all(); 
-        return view('index', compact('data_mahasiswa'));
-    }
+        $produkRandom = Produk::inRandomOrder()->take(3)->get();
 
-    public function home() {
-        return view('index');
-    }
-
-    public function list_produk() {
-        $data = Produk::all(); 
-        return view('list_produk', compact('data'));
-    }
-
-    public function produk() {
-        $data = Produk::all(); 
-        return view('produk', compact('data'));
-    }
-    
-    public function store_produk(Request $request) {
-        Produk::create([
-            'kode_barang'   => $request->kode,
-            'nama_barang'   => $request->nama,
-            'kategori'      => $request->kategori,
-            'stok'          => $request->stok,
-            'harga'         => $request->harga,
-            'tanggal_masuk' => $request->tanggal,
-        ]);
-        return redirect()->back()->with('success', 'Produk berhasil ditambah!');
-    }
-
-    public function hapus_produk($id) {
-        Produk::destroy($id);
-        return redirect()->back()->with('success', 'Produk berhasil dihapus!');
+        return view('index', compact('produkRandom'));
     }
 
     public function history() {
@@ -55,13 +23,4 @@ class PageController extends Controller
     public function beli() {
         return view('beli');
     }
-
-    public function about() {
-    return view('about');
-    }
-
-    public function contact() {
-        return view('contact');
-    }
 }
-
