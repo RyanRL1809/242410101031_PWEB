@@ -28,6 +28,38 @@
         </div>
     </section>
 
+    <section class="max-w-5xl mx-auto px-6 mt-[-40px] relative z-10">
+        <div class="bg-white rounded-[2rem] p-6 shadow-2xl border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-5">
+                <div class="bg-[#66c0f4]/10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl">
+                    🌤️
+                </div>
+                <div>
+                    <h2 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pantauan Cuaca Server</h2>
+                    
+                    <div id="weather-loading" class="text-sm italic text-gray-500 flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4 text-[#66c0f4]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sinkronisasi satelit...
+                    </div>
+
+                    <div id="weather-data" class="hidden items-center gap-3">
+                        <h3 class="text-2xl font-black text-[#1b2838] tracking-tight" id="city-name">-</h3>
+                        <span class="text-gray-300">|</span>
+                        <p class="text-[#66c0f4] font-bold capitalize" id="weather-desc">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center md:text-right bg-gray-50 px-8 py-3 rounded-2xl w-full md:w-auto border border-gray-100">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Suhu Udara</p>
+                <p class="text-3xl font-black text-[#5c7e10]"><span id="temperature">--</span>°C</p>
+            </div>
+        </div>
+    </section>
+
     <section id="voucher" class="max-w-7xl mx-auto px-6 py-24 scroll-mt-20">
         <div class="flex flex-col md:flex-row items-end justify-between mb-12 gap-4">
             <div class="max-w-xl">
@@ -85,4 +117,45 @@
             </div>
         </div>
     </section>
+
+    @auth
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 mt-6 relative z-10">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] items-stretch lg:items-center gap-4 sm:gap-6">
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 min-w-0">
+                    <div class="shrink-0 bg-[#5c7e10]/10 text-[#5c7e10] dark:bg-[#78a315]/20 dark:text-[#78a315] w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex flex-col items-center justify-center border border-[#5c7e10]/20">
+                        <span class="text-2xl sm:text-3xl font-black leading-none">{{ session('visit_count', 1) }}</span>
+                        <span class="text-[9px] font-bold uppercase tracking-wider mt-1">Kali</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="text-xl font-black text-[#1b2838] dark:text-white uppercase italic tracking-tighter">📊 Tracker Aktivitas Sesi</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">Sistem memantau intensitas navigasi browser lo di halaman ini.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
+                    <div class="bg-gray-50 dark:bg-gray-950 px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5 min-w-0">
+                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Sesi Pertama Dimulai</p>
+                        <p class="text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-300 break-words">{{ session('first_visit', '-') }}</p>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-950 px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5 min-w-0">
+                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Aktivitas Terakhir</p>
+                        <p class="text-xs sm:text-sm font-bold text-[#66c0f4] break-words">{{ session('last_visit', '-') }}</p>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-auto">
+                    <form action="{{ route('kunjungan.reset') }}" method="POST" onsubmit="return confirm('Yakin mau mengulang hitungan sesi dari awal bro?')">
+                        @csrf
+                        <button type="submit" class="w-full lg:w-auto whitespace-nowrap bg-red-500 hover:bg-red-600 active:scale-95 text-white text-xs font-black uppercase tracking-wider px-5 sm:px-6 py-4 rounded-xl transition-all shadow-md shadow-red-500/20">
+                            Reset Hitungan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endauth
 @endsection
+

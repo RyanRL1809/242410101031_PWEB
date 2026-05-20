@@ -17,6 +17,7 @@ if (appDataEl) {
     const sortOrder = document.getElementById('sortOrder');
     const productContainer = document.getElementById('productContainer');
     const productCount = document.getElementById('productCount');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
     const esc = (str) => String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -59,44 +60,39 @@ if (appDataEl) {
         </div>
     `;
 
-    const render = () => {
-        const keyword = searchInput?.value.toLowerCase().trim() ?? '';
-        const hargaRange = document.querySelector('.filterHarga:checked')?.value ?? 'Semua Harga';
-        const stokOnly = filterStok?.checked ?? false;
-        const sort = sortOrder?.value ?? 'termurah';
+    const filterDanUrutkan = (items, keyword, hargaRange, sort) => {
+        const kataKunci = keyword.toLowerCase();
 
-        let filtered = dataBarang.filter((item) => {
-            const nama = String(item.nama_barang ?? '').toLowerCase();
-            const kode = String(item.kode_barang ?? '').toLowerCase();
-            const hargaText = String(item.harga ?? '');
-            const cocokSearch = nama.includes(keyword) || kode.includes(keyword) || hargaText.includes(keyword);
+        const filtered = items.filter((item) => {
+            const harga = Number(item.harga);
+            const cocokKeyword = kataKunci === ''
+                || String(item.nama_barang ?? '').toLowerCase().includes(kataKunci)
+                || String(item.kategori ?? '').toLowerCase().includes(kataKunci)
+                || String(item.harga ?? '').includes(kataKunci);
 
             let cocokHarga = true;
-            const harga = Number(item.harga);
             if (hargaRange === 'Dibawah Rp50.000') cocokHarga = harga < 50000;
             else if (hargaRange === 'Rp50.000 - Rp200.000') cocokHarga = harga >= 50000 && harga <= 200000;
             else if (hargaRange === 'Diatas Rp200.000') cocokHarga = harga > 200000;
 
-            const cocokStok = stokOnly ? Number(item.stok) > 0 : true;
-
-            return cocokSearch && cocokHarga && cocokStok;
+            return cocokKeyword && cocokHarga;
         });
 
-        filtered.sort((a, b) => (
+        return filtered.sort((a, b) => (
             sort === 'termurah'
                 ? Number(a.harga) - Number(b.harga)
                 : Number(b.harga) - Number(a.harga)
         ));
+    };
 
+    const tampilkanProduk = (items) => {
         if (productCount) {
-            productCount.textContent = String(filtered.length);
+            productCount.textContent = String(items.length);
         }
 
-        if (!productContainer) {
-            return;
-        }
+        if (!productContainer) return;
 
-        if (filtered.length === 0) {
+        if (items.length === 0) {
             productContainer.innerHTML = `
                 <div class="col-span-full py-20 text-center">
                     <p class="text-gray-400 italic">Produk tidak ditemukan.</p>
@@ -105,7 +101,41 @@ if (appDataEl) {
             return;
         }
 
-        productContainer.innerHTML = filtered.map(buatKartu).join('');
+        productContainer.innerHTML = items.map(buatKartu).join('');
+    };
+
+    const ambilDataDariServer = async (keyword) => {
+        if (!csrfToken) {
+            throw new Error('CSRF token tidak ditemukan');
+        }
+
+        const response = await fetch('/katalog/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ keyword })
+        });
+
+        if (!response.ok) throw new Error('Gagal narik data dari server');
+
+        return response.json();
+    };
+
+    const render = async () => {
+        const keyword = searchInput?.value.trim() ?? '';
+        const hargaRange = document.querySelector('.filterHarga:checked')?.value ?? 'Semua Harga';
+        const sort = sortOrder?.value ?? 'termurah';
+
+        try {
+            const produkDariServer = await ambilDataDariServer(keyword);
+            tampilkanProduk(filterDanUrutkan(produkDariServer, keyword, hargaRange, sort));
+        } catch (error) {
+            console.error('AJAX Error bro:', error);
+            tampilkanProduk(filterDanUrutkan(dataBarang, keyword, hargaRange, sort));
+        }
     };
 
     searchInput?.addEventListener('input', render);
@@ -130,3 +160,127 @@ if (appDataEl) {
 
     render();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const weatherContainer = document.getElementById('weather-loading');
+    
+    if (weatherContainer) {
+        fetchWeather();
+    }
+});
+
+async function fetchWeather() {
+    const apiUrl = 'https://wttr.in/Jember?format=j1'; 
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Gagal koneksi ke API');
+        
+        const data = await response.json();
+        
+        const current = data.current_condition[0];
+        const area = data.nearest_area[0];
+        
+        document.getElementById('city-name').innerText = area.areaName[0].value;
+        document.getElementById('temperature').innerText = current.temp_C;
+        document.getElementById('weather-desc').innerText = current.weatherDesc[0].value;
+        
+        document.getElementById('weather-loading').classList.add('hidden');
+        const dataContainer = document.getElementById('weather-data');
+        dataContainer.classList.remove('hidden');
+        dataContainer.classList.add('flex'); 
+        
+    } catch (error) {
+        console.error('Error cuaca:', error);
+        document.getElementById('weather-loading').innerHTML = '<span class="text-red-500 font-bold">Gagal memuat cuaca</span>';
+    }
+}
+
+window.setCookie = function(name, value, days = 30) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+}
+
+window.getCookie = function(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+window.deleteCookie = function(name) {
+    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function applyTheme(theme) {
+    const shouldUseDark = theme === 'dark'
+        || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    document.documentElement.classList.toggle('dark', shouldUseDark);
+}
+
+function applyFontSize(fontSize) {
+    document.documentElement.setAttribute('data-font-size', fontSize || 'normal');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnToggle = document.getElementById('dark-mode-toggle');
+    if (btnToggle) {
+        btnToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            setCookie('theme', isDark ? 'dark' : 'light', 30);
+        });
+    }
+
+    const prefForm = document.getElementById('preferences-form');
+    if (prefForm) {
+        prefForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const themeValue = document.querySelector('input[name="theme"]:checked')?.value;
+            const fontSizeValue = document.getElementById('font_size')?.value;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            try {
+                const response = await fetch('/pengaturan/simpan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ theme: themeValue, font_size: fontSizeValue })
+                });
+
+                if (!response.ok) throw new Error('Gagal menyimpan preferensi server');
+
+                const result = await response.json();
+
+                setCookie('theme', result.theme, 30);
+                setCookie('font_size', result.font_size, 30);
+
+                applyTheme(result.theme);
+                applyFontSize(result.font_size);
+
+                alert('Mantap! ' + result.message);
+            } catch (error) {
+                console.error('Error simpan preferensi:', error);
+            }
+        });
+    }
+});
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getCookie('theme') === 'system') {
+        applyTheme('system');
+    }
+});

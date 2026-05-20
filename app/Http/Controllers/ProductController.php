@@ -50,28 +50,28 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Produk $product)
-{
-    $request->validate([
-        'kode_barang' => 'required|unique:produks,kode_barang,' . $product->id,
-        'nama_barang' => 'required|min:3|max:255',
-        'kategori' => 'required|in:Steam Wallet,Epic Games Wallet,Ubisoft Wallet',
-        'stok' => 'required|integer|min:0',
-        'harga' => 'required|numeric|min:1000',
-        'tanggal_masuk' => 'required|date',
-    ]);
+    {
+        $request->validate([
+            'kode_barang' => 'required|unique:produks,kode_barang,' . $product->id,
+            'nama_barang' => 'required|min:3|max:255',
+            'kategori' => 'required|in:Steam Wallet,Epic Games Wallet,Ubisoft Wallet',
+            'stok' => 'required|integer|min:0',
+            'harga' => 'required|numeric|min:1000',
+            'tanggal_masuk' => 'required|date',
+        ]);
 
-    $product->update([
-        'kode_barang' => $request->kode_barang,
-        'nama_barang' => $request->nama_barang,
-        'kategori' => $request->kategori,
-        'stok' => $request->stok,
-        'harga' => $request->harga,
-        'tanggal_masuk' => $request->tanggal_masuk,
-    ]);
+        $product->update([
+            'kode_barang' => $request->kode_barang,
+            'nama_barang' => $request->nama_barang,
+            'kategori' => $request->kategori,
+            'stok' => $request->stok,
+            'harga' => $request->harga,
+            'tanggal_masuk' => $request->tanggal_masuk,
+        ]);
 
-    return redirect()->route('products.index')
-        ->with('success', 'Produk berhasil diupdate!');
-}
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil diupdate!');
+    }
 
     public function destroy(Produk $product)
     {
@@ -94,5 +94,17 @@ class ProductController extends Controller
             ->max();
 
         return 'SW-' . str_pad(($nomorTerakhir ?? 0) + 1, 3, '0', STR_PAD_LEFT);
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword', '');
+
+        $hasilPencarian = Produk::where('nama_barang', 'like', "%{$keyword}%")
+                                ->orWhere('kategori', 'like', "%{$keyword}%")
+                                ->orWhere('harga', 'like', "%{$keyword}%")
+                                ->get();
+
+        return response()->json($hasilPencarian);
     }
 }

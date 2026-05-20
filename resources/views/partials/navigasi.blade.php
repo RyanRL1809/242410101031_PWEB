@@ -26,6 +26,12 @@
             @endauth
             <li><a href="{{ route('history') }}" class="hover:text-white transition-colors">History</a></li>
             <li><a href="{{ route('help') }}" class="hover:text-white transition-colors">Help</a></li>
+            <li><a href="{{ route('pengaturan.index') }}" class="hover:text-white transition-colors">Pengaturan</a></li>
+            <li>
+                <button id="dark-mode-toggle" type="button" class="px-3 py-2 bg-gray-200 text-[#1b2838] dark:bg-gray-700 dark:text-white rounded-xl font-bold transition-colors">
+                    Theme
+                </button>
+            </li>
             @auth
             <li class="border-l border-gray-600 pl-5">
                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 transition-opacity hover:opacity-85">

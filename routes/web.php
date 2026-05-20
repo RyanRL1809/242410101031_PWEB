@@ -9,7 +9,10 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/produk-katalog', [ProductController::class, 'catalog'])->name('katalog');
 Route::get('/help', [PageController::class, 'help'])->name('help');
 Route::get('/beli', [PageController::class, 'beli'])->name('beli');
-
+Route::post('/katalog/search', [ProductController::class, 'search'])->name('katalog.search');
+Route::get('/pengaturan', [PageController::class, 'pengaturan'])->name('pengaturan.index');
+Route::post('/pengaturan/simpan', [PageController::class, 'simpanPengaturan'])->name('pengaturan.simpan');
+Route::post('/reset-kunjungan', [PageController::class, 'resetKunjungan'])->middleware('auth')->name('kunjungan.reset');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [PageController::class, 'index'])->name('dashboard');
     Route::get('/history', [PageController::class, 'history'])->name('history');

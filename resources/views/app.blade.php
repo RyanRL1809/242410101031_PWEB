@@ -3,13 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <title>@yield('title', 'Ryan Voucher Store')</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        function getCookieInline(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for(let i=0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        const theme = getCookieInline('theme') || 'system';
+        const fontSize = getCookieInline('font_size') || 'normal';
+
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        document.documentElement.setAttribute('data-font-size', fontSize);
+    </script>
+
     <style>
         html { scroll-behavior: smooth; }
+        html[data-font-size="kecil"] { font-size: 14px; }
+        html[data-font-size="normal"] { font-size: 16px; }
+        html[data-font-size="besar"] { font-size: 18px; }
     </style>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="bg-gray-50 dark:bg-gray-950 flex flex-col min-h-screen transition-colors">
 
     @include('partials.navigasi')
 
@@ -31,7 +62,6 @@
     </main>
 
     @include('components.footer')
-    @vite('resources/js/app.js')
     @stack('scripts')
 </body>
 </html>
