@@ -11,7 +11,7 @@
 
         <div class="flex flex-col md:flex-row gap-6 mb-10">
             <div class="flex-1 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex gap-2">
-                <input type="text" placeholder="Cari email atau jenis voucher..." 
+                <input type="text" placeholder="Cari email atau jenis voucher..."
                        class="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#66c0f4] transition-all">
                 <button class="bg-[#1b2838] text-white px-6 py-2 rounded-xl font-bold hover:bg-black transition-all">
                     Cari
@@ -37,6 +37,12 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="mb-6 rounded-3xl border border-green-100 bg-green-50 p-5 text-sm text-green-900">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
@@ -48,43 +54,55 @@
                             <th class="p-5 uppercase text-xs tracking-widest text-center">Jumlah</th>
                             <th class="p-5 uppercase text-xs tracking-widest text-right">Total Bayar</th>
                             <th class="p-5 uppercase text-xs tracking-widest text-center">Status</th>
+                            @if(auth()->user()->role === 'admin')
+                                <th class="p-5 uppercase text-xs tracking-widest text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @php
-                            $history = [
-                                ['id' => 1, 'email' => 'rayn@email.com', 'item' => 'Steam 45K', 'qty' => 2, 'total' => 'Rp90.000', 'status' => 'success'],
-                                ['id' => 2, 'email' => 'sight@email.com', 'item' => 'Steam 90K', 'qty' => 1, 'total' => 'Rp90.000', 'status' => 'pending'],
-                                ['id' => 3, 'email' => 'bless@email.com', 'item' => 'Steam 120K', 'qty' => 1, 'total' => 'Rp120.000', 'status' => 'failed'],
-                            ];
-                        @endphp
-
-                        @foreach($history as $h)
+                        @forelse($orders as $order)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="p-5 font-mono text-gray-400 text-sm">{{ $h['id'] }}</td>
-                            <td class="p-5 font-bold text-gray-800">{{ $h['email'] }}</td>
-                            <td class="p-5 text-gray-600">{{ $h['item'] }}</td>
-                            <td class="p-5 text-center text-gray-600 font-medium">{{ $h['qty'] }}</td>
-                            <td class="p-5 text-right font-black text-[#1b2838]">{{ $h['total'] }}</td>
+                            <td class="p-5 font-mono text-gray-400 text-sm">{{ $order->id }}</td>
+                            <td class="p-5 font-bold text-gray-800">{{ $order->email }}</td>
+                            <td class="p-5 text-gray-600">{{ $order->product->nama_barang ?? 'Produk tidak diketahui' }}</td>
+                            <td class="p-5 text-center text-gray-600 font-medium">{{ $order->quantity }}</td>
+                            <td class="p-5 text-right font-black text-[#1b2838]">Rp{{ number_format($order->total, 0, ',', '.') }}</td>
                             <td class="p-5">
                                 <div class="flex justify-center">
-                                    @if($h['status'] == 'success')
+                                    @if($order->status == 'success')
                                         <span class="bg-green-100 text-green-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-green-200">
                                             Success
                                         </span>
-                                    @elseif($h['status'] == 'pending')
+                                    @elseif($order->status == 'pending')
                                         <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-yellow-200">
                                             Pending
                                         </span>
                                     @else
                                         <span class="bg-red-100 text-red-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-red-200">
-                                            Failed
+                                            {{ ucfirst($order->status) }}
                                         </span>
                                     @endif
                                 </div>
                             </td>
+                            @if(auth()->user()->role === 'admin')
+                                <td class="p-5 text-center">
+                                    <form action="{{ route('history.updateStatus', ['order' => $order->id]) }}" method="POST" class="flex flex-col gap-2 items-center justify-center">
+                                        @csrf
+                                        <select name="status" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#66c0f4]">
+                                            <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="success" {{ $order->status === 'success' ? 'selected' : '' }}>Success</option>
+                                            <option value="failed" {{ $order->status === 'failed' ? 'selected' : '' }}>Failed</option>
+                                        </select>
+                                        <button type="submit" class="mt-2 px-4 py-2 bg-[#1b2838] text-white text-xs uppercase rounded-xl font-black hover:bg-black transition-all">Update</button>
+                                    </form>
+                                </td>
+                            @endif
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="{{ auth()->user()->role === 'admin' ? 7 : 6 }}" class="p-8 text-center text-gray-500">Belum ada riwayat pembelian untuk akun ini.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
