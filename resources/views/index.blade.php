@@ -4,9 +4,9 @@
 
 @section('content')
     <section class="relative bg-[#1b2838] overflow-hidden py-24">
-        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" 
+        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none"
              style="background: radial-gradient(circle at 50% 50%, #66c0f4 0%, transparent 70%);"></div>
-        
+
         <div class="relative max-w-5xl mx-auto px-6 text-center">
             <span class="bg-[#66c0f4]/20 text-[#66c0f4] px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block">
                 Region Indonesia (IDR)
@@ -21,9 +21,15 @@
                 <a href="#voucher" class="bg-[#5c7e10] hover:bg-[#78a315] text-white px-10 py-5 rounded-2xl font-black text-xl shadow-xl transition-all hover:-translate-y-1 active:scale-95">
                     BELI SEKARANG JUGA!
                 </a>
+                @auth
                 <a href="{{ url('/history') }}" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all">
                     Cek Riwayat
                 </a>
+                @else
+                <a href="{{ route('login') }}" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all">
+                    Login untuk lihat riwayat
+                </a>
+                @endauth
             </div>
         </div>
     </section>
@@ -36,7 +42,7 @@
                 </div>
                 <div>
                     <h2 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pantauan Cuaca Server</h2>
-                    
+
                     <div id="weather-loading" class="text-sm italic text-gray-500 flex items-center gap-2">
                         <svg class="animate-spin h-4 w-4 text-[#66c0f4]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -52,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="text-center md:text-right bg-gray-50 px-8 py-3 rounded-2xl w-full md:w-auto border border-gray-100">
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Suhu Udara</p>
                 <p class="text-3xl font-black text-[#5c7e10]"><span id="temperature">--</span>°C</p>
@@ -76,14 +82,14 @@
             @forelse($produkRandom as $produk)
             <div class="group bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm hover:shadow-2xl hover:border-[#66c0f4]/30 transition-all duration-500 flex flex-col items-center text-center">
                 <span class="bg-gray-100 text-gray-400 text-[10px] font-black px-4 py-1 rounded-full mb-6 uppercase tracking-widest">{{ $produk->kategori }}</span>
-                
+
                 <div class="relative mb-6">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png?_=20220611141426" class="w-24 transition-transform duration-700 group-hover:rotate-360 group-hover:scale-110">
                 </div>
 
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Nominal Saldo</h3>
                 <p class="text-4xl font-black text-[#1b2838] tracking-tighter mb-4">{{ $produk->nama_barang }}</p>
-                
+
                 <div class="w-full bg-gray-50 rounded-2xl p-4 mb-6">
                     <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Harga Nett</p>
                     <p class="text-2xl font-black text-[#5c7e10]">Rp{{ number_format($produk->harga, 0, ',', '.') }}</p>
@@ -117,45 +123,5 @@
             </div>
         </div>
     </section>
-
-    @auth
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 mt-6 relative z-10">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
-            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] items-stretch lg:items-center gap-4 sm:gap-6">
-                
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 min-w-0">
-                    <div class="shrink-0 bg-[#5c7e10]/10 text-[#5c7e10] dark:bg-[#78a315]/20 dark:text-[#78a315] w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex flex-col items-center justify-center border border-[#5c7e10]/20">
-                        <span class="text-2xl sm:text-3xl font-black leading-none">{{ session('visit_count', 1) }}</span>
-                        <span class="text-[9px] font-bold uppercase tracking-wider mt-1">Kali</span>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="text-xl font-black text-[#1b2838] dark:text-white uppercase italic tracking-tighter">📊 Tracker Aktivitas Sesi</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">Sistem memantau intensitas navigasi browser lo di halaman ini.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
-                    <div class="bg-gray-50 dark:bg-gray-950 px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5 min-w-0">
-                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Sesi Pertama Dimulai</p>
-                        <p class="text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-300 break-words">{{ session('first_visit', '-') }}</p>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-950 px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5 min-w-0">
-                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Aktivitas Terakhir</p>
-                        <p class="text-xs sm:text-sm font-bold text-[#66c0f4] break-words">{{ session('last_visit', '-') }}</p>
-                    </div>
-                </div>
-
-                <div class="w-full lg:w-auto">
-                    <form action="{{ route('kunjungan.reset') }}" method="POST" onsubmit="return confirm('Yakin mau mengulang hitungan sesi dari awal bro?')">
-                        @csrf
-                        <button type="submit" class="w-full lg:w-auto whitespace-nowrap bg-red-500 hover:bg-red-600 active:scale-95 text-white text-xs font-black uppercase tracking-wider px-5 sm:px-6 py-4 rounded-xl transition-all shadow-md shadow-red-500/20">
-                            Reset Hitungan
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    @endauth
 @endsection
 

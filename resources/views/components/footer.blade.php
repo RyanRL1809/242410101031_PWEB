@@ -10,7 +10,9 @@
             <h3 class="text-xl font-bold mb-4">Layanan</h3>
             <ul class="space-y-2 text-gray-400 text-sm">
                 <li><a href="{{ route('katalog') }}" class="hover:text-[#66c0f4] transition-colors">Daftar Harga</a></li>
+                @auth
                 <li><a href="{{ url('/history') }}" class="hover:text-[#66c0f4] transition-colors">Cek Status</a></li>
+                @endauth
                 <li><a href="{{ url('/help') }}" class="hover:text-[#66c0f4] transition-colors">Bantuan</a></li>
             </ul>
         </div>

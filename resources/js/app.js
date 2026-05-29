@@ -163,33 +163,80 @@ if (appDataEl) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const weatherContainer = document.getElementById('weather-loading');
-    
+
     if (weatherContainer) {
         fetchWeather();
+    }
+
+    const historySearchInput = document.getElementById('historySearchInput');
+    const historySearchForm = document.getElementById('historySearchForm');
+    const historyTable = document.querySelector('table');
+    const historyColumnCount = historyTable?.querySelectorAll('thead th').length || 6;
+
+    const applyHistoryFilter = () => {
+        if (!historySearchInput) return;
+        const keyword = historySearchInput.value.trim().toLowerCase();
+        const historyBody = document.querySelector('tbody');
+        if (!historyBody) return;
+
+        historyBody.querySelectorAll('tr.history-no-match').forEach((row) => row.remove());
+
+        const orderRows = historyBody.querySelectorAll('tr.history-order-row');
+        let visibleIndex = 0;
+
+        orderRows.forEach((row) => {
+            const rowText = row.textContent.toLowerCase();
+            const match = keyword === '' || rowText.includes(keyword);
+            row.style.display = match ? '' : 'none';
+
+            if (match) {
+                visibleIndex += 1;
+                const indexCell = row.querySelector('td:first-child');
+                if (indexCell) indexCell.textContent = String(visibleIndex);
+            }
+        });
+
+        if (visibleIndex === 0) {
+            const noMatchRow = document.createElement('tr');
+            noMatchRow.className = 'history-no-match';
+            noMatchRow.innerHTML = `<td colspan="${historyColumnCount}" class="p-8 text-center text-gray-500">Tidak ada riwayat yang cocok.</td>`;
+            historyBody.appendChild(noMatchRow);
+        }
+    };
+
+    if (historySearchInput) {
+        historySearchInput.addEventListener('input', applyHistoryFilter);
+    }
+
+    if (historySearchForm) {
+        historySearchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            applyHistoryFilter();
+        });
     }
 });
 
 async function fetchWeather() {
-    const apiUrl = 'https://wttr.in/Jember?format=j1'; 
+    const apiUrl = 'https://wttr.in/Jember?format=j1';
 
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Gagal koneksi ke API');
-        
+
         const data = await response.json();
-        
+
         const current = data.current_condition[0];
         const area = data.nearest_area[0];
-        
+
         document.getElementById('city-name').innerText = area.areaName[0].value;
         document.getElementById('temperature').innerText = current.temp_C;
         document.getElementById('weather-desc').innerText = current.weatherDesc[0].value;
-        
+
         document.getElementById('weather-loading').classList.add('hidden');
         const dataContainer = document.getElementById('weather-data');
         dataContainer.classList.remove('hidden');
-        dataContainer.classList.add('flex'); 
-        
+        dataContainer.classList.add('flex');
+
     } catch (error) {
         console.error('Error cuaca:', error);
         document.getElementById('weather-loading').innerHTML = '<span class="text-red-500 font-bold">Gagal memuat cuaca</span>';
@@ -237,7 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnToggle) {
         btnToggle.addEventListener('click', () => {
             const isDark = document.documentElement.classList.toggle('dark');
-            setCookie('theme', isDark ? 'dark' : 'light', 30);
+            const newTheme = isDark ? 'dark' : 'light';
+            setCookie('theme', newTheme, 30);
+            localStorage.setItem('theme', newTheme);
         });
     }
 
@@ -267,6 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setCookie('theme', result.theme, 30);
                 setCookie('font_size', result.font_size, 30);
+                localStorage.setItem('theme', result.theme);
+                localStorage.setItem('font_size', result.font_size);
 
                 applyTheme(result.theme);
                 applyFontSize(result.font_size);

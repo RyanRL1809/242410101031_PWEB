@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -12,7 +14,15 @@ class ProductController extends Controller
         $data = Produk::paginate(10);
         $kodeBerikutnya = $this->buatKodeBarang();
 
-        return view('produk', compact('data', 'kodeBerikutnya'));
+        $topProducts = Order::select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(total) as total_revenue'))
+            ->where('status', 'success')
+            ->groupBy('product_id')
+            ->with('product')
+            ->orderByDesc('total_quantity')
+            ->take(5)
+            ->get();
+
+        return view('produk', compact('data', 'kodeBerikutnya', 'topProducts'));
     }
 
     public function catalog()

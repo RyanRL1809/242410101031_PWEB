@@ -68,11 +68,39 @@
             </div>
 
             <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-6 italic">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png" class="w-20 opacity-50" alt="icon">
-                    <div>
-                        <h3 class="text-xl font-bold uppercase tracking-widest text-gray-400">Statistik Produk</h3>
-                        <p class="text-sm text-gray-400 italic">Total: {{ $data->total() }} Produk TerdaftarTotal</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-6 italic">
+                    <div class="flex items-center gap-6">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png" class="w-20 opacity-50" alt="icon">
+                        <div>
+                            <h3 class="text-xl font-bold uppercase tracking-widest text-gray-400">Statistik Produk</h3>
+                            <p class="text-sm text-gray-400 italic">Total: {{ $data->total() }} Produk Terdaftar</p>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4">
+                        <div class="rounded-3xl border border-gray-100 bg-gray-50 p-4">
+                            <p class="text-sm text-gray-500">Produk paling banyak dibeli (berdasarkan transaksi sukses):</p>
+                        </div>
+                        <div class="rounded-3xl border border-gray-100 bg-white p-4">
+                            @if($topProducts->isEmpty())
+                                <p class="text-gray-500 text-sm">Belum ada data penjualan yang cukup.</p>
+                            @else
+                                <ol class="list-decimal list-inside space-y-3 text-sm text-gray-700">
+                                    @foreach($topProducts as $product)
+                                        <li class="flex items-start justify-between gap-4">
+                                            <div>
+                                                <p class="font-bold text-gray-900">{{ $product->product?->nama_barang ?? 'Produk tidak ditemukan' }}</p>
+                                                <p class="text-xs text-gray-500">Kategori: {{ $product->product?->kategori ?? 'Lainnya' }}</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="font-black text-[#1b2838]">{{ $product->total_quantity }} voucher</p>
+                                                <p class="text-xs text-gray-500">Rp{{ number_format($product->total_revenue, 0, ',', '.') }}</p>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ol>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -116,7 +144,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                                
+
                                 @if(count($data) == 0)
                                 <tr>
                                     <td colspan="6" class="p-10 text-center text-gray-400 italic">Belum ada data produk.</td>

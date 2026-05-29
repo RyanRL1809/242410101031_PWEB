@@ -66,14 +66,11 @@
             </div>
 
             <div class="mt-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div class="bg-[#f8fafc] rounded-3xl border border-gray-100 p-6 flex-1">
-                    <p class="text-sm text-gray-500">Catatan: ini adalah tampilan QRIS simulasi. Jika ingin membuat alur pembayaran nyata, sambungkan dengan gateway pembayaran atau API bank yang sesuai.</p>
-                </div>
                 <div>
                     <form action="{{ route('beli.complete', ['order' => $order->id]) }}" method="POST" class="mt-2 lg:mt-0">
                         @csrf
                         <button type="submit" class="w-full rounded-3xl bg-[#1b2838] px-6 py-4 text-sm font-black uppercase text-white shadow-lg hover:bg-black transition-all">
-                            Continue ke Status Sukses
+                            Continue
                         </button>
                     </form>
                 </div>

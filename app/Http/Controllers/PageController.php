@@ -13,36 +13,46 @@ class PageController extends Controller
     public function index(Request $request) {
         $produkRandom = Produk::inRandomOrder()->take(3)->get();
 
-        if ($request->user()) {
-            $waktuSekarang = now()->format('d M Y, H:i:s');
-
-            if (!$request->session()->has('first_visit')) {
-                $request->session()->put('first_visit', $waktuSekarang);
-                $request->session()->put('visit_count', 0);
-            }
-
-            $request->session()->increment('visit_count');
-            $request->session()->put('last_visit', $waktuSekarang);
-        }
-
         return view('index', compact('produkRandom'));
     }
 
-    public function resetKunjungan(Request $request) {
-        $request->session()->forget(['first_visit', 'last_visit', 'visit_count']);
-        return redirect()->back()->with('success', 'Statistik hitungan kunjungan lo berhasil direset dari awal!');
-    }
+    public function history(Request $request) {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
 
-    public function history() {
+        $status = $request->query('status', 'all');
+        $query = $request->query('q', '');
+        $allowedFilters = ['all', 'success', 'failed'];
+        if (!in_array($status, $allowedFilters)) {
+            $status = 'all';
+        }
+
         $orders = Order::with('product');
 
         if (auth()->user()->role !== 'admin') {
             $orders->where('user_id', auth()->id());
         }
 
+        if ($status === 'all') {
+            $orders->whereIn('status', ['success', 'failed']);
+        } else {
+            $orders->where('status', $status);
+        }
+
+        if (!empty($query)) {
+            $orders->where(function ($subQuery) use ($query) {
+                $subQuery->where('email', 'like', "%{$query}%")
+                    ->orWhere('customer_name', 'like', "%{$query}%")
+                    ->orWhereHas('product', function ($productQuery) use ($query) {
+                        $productQuery->where('nama_barang', 'like', "%{$query}%");
+                    });
+            });
+        }
+
         $orders = $orders->latest()->get();
 
-        return view('history', compact('orders'));
+        return view('history', compact('orders', 'status', 'query'));
     }
 
     public function updateOrderStatus(Request $request, Order $order)
@@ -82,8 +92,38 @@ class PageController extends Controller
         return view('help');
     }
 
+    protected function getTopBuyers() {
+        $topBuyers = Order::with('product')
+            ->where('status', 'success')
+            ->get()
+            ->groupBy('email')
+            ->map(function ($orders, $email) {
+                $totalQuantity = $orders->sum('quantity');
+                $totalPaid = $orders->sum('total');
+                $topCategory = $orders
+                    ->groupBy(fn($order) => $order->product?->kategori ?? 'Lainnya')
+                    ->sortByDesc(fn($group) => $group->sum('quantity'))
+                    ->keys()
+                    ->first();
+
+                return (object) [
+                    'customer_name' => $orders->first()->customer_name,
+                    'email' => $email,
+                    'category' => $topCategory,
+                    'total_quantity' => $totalQuantity,
+                    'total_paid' => $totalPaid,
+                ];
+            })
+            ->sortByDesc(fn($buyer) => $buyer->total_quantity)
+            ->take(5)
+            ->values();
+
+        return $topBuyers;
+    }
+
     public function beliForm() {
-        return view('beli');
+        $topBuyers = $this->getTopBuyers();
+        return view('beli', compact('topBuyers'));
     }
 
     public function storeOrder(Request $request)
@@ -132,7 +172,8 @@ class PageController extends Controller
     }
 
     public function beli(Produk $product) {
-        return view('beli', compact('product'));
+        $topBuyers = $this->getTopBuyers();
+        return view('beli', compact('product', 'topBuyers'));
     }
 
     public function qris(Order $order)

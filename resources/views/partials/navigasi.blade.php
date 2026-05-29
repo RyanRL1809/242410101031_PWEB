@@ -24,7 +24,9 @@
 
                 @endif
             @endauth
+            @auth
             <li><a href="{{ route('history') }}" class="hover:text-white transition-colors">History</a></li>
+            @endauth
             <li><a href="{{ route('help') }}" class="hover:text-white transition-colors">Help</a></li>
             <li><a href="{{ route('pengaturan.index') }}" class="hover:text-white transition-colors">Pengaturan</a></li>
             <li>

@@ -137,13 +137,19 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 text-sm">
+                        @forelse($topBuyers as $buyer)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="p-4 font-mono text-gray-400">01</td>
-                            <td class="p-4 font-bold">Rayn</td>
-                            <td class="p-4 text-gray-500 tracking-tighter">Steam Wallet</td>
-                            <td class="p-4">30</td>
-                            <td class="p-4 text-right font-black text-[#1b2838]">Rp1.500.000</td>
+                            <td class="p-4 font-mono text-gray-400">{{ $loop->iteration }}</td>
+                            <td class="p-4 font-bold text-gray-800">{{ $buyer->customer_name }}</td>
+                            <td class="p-4 text-gray-500 tracking-tighter">{{ $buyer->category }}</td>
+                            <td class="p-4">{{ $buyer->total_quantity }}</td>
+                            <td class="p-4 text-right font-black text-[#1b2838]">Rp{{ number_format($buyer->total_paid, 0, ',', '.') }}</td>
                         </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="p-8 text-center text-gray-500">Belum ada pembeli yang telah menyelesaikan pembayaran.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
