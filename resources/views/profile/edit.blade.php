@@ -47,12 +47,6 @@
 
                 <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="max-w-xl mx-auto">
-                        @include('profile.partials.delete-user-form')
-                    </div>
-                </div>
-
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div class="max-w-xl mx-auto">
                         <h2 class="text-lg font-semibold text-slate-800">Keluar Akun</h2>
                         <p class="mt-1 text-sm text-slate-500">Kamu akan keluar dari sesi ini di perangkat sekarang.</p>
 
