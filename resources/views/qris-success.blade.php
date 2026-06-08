@@ -6,8 +6,8 @@
     <div class="max-w-4xl mx-auto px-4 py-12">
         <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
             <div class="text-center mb-10">
-                <h1 class="text-3xl font-black text-[#1b2838]">Pembayaran Berhasil</h1>
-                <p class="text-gray-500 mt-2">Pesanan kamu sudah tercatat sebagai sukses. Terima kasih telah berbelanja!</p>
+                <h1 class="text-3xl font-black text-[#1b2838]">Pembayaran Direkam</h1>
+                <p class="text-gray-500 mt-2">Pesanan kamu telah dicatat sebagai proses. Tunggu konfirmasi admin untuk status akhir.</p>
             </div>
 
             <div class="grid gap-6 lg:grid-cols-2">
@@ -32,7 +32,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span>Status</span>
-                            <span class="font-semibold text-green-600">Sukses</span>
+                            <span class="font-semibold text-yellow-600">Proses</span>
                         </div>
                         <div class="flex justify-between pt-4 border-t border-gray-200">
                             <span class="font-bold">Total Dibayar</span>

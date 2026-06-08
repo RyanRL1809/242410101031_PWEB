@@ -60,12 +60,18 @@
             <div id="appData"
                 data-produk='@json($data->items())'
                 data-url-beli="{{ url('/beli') }}"
+                data-login-url="{{ route('login') }}"
+                data-is-auth="{{ auth()->check() ? '1' : '0' }}"
                 class="hidden">
             </div>
 
             <div id="productContainer" class="grid grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($data as $item)
-                <a href="{{ url('/beli/' . $item->id) }}" class="group block bg-white rounded-4xl p-6 border border-gray-50 shadow-sm hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300 flex flex-col justify-between text-current no-underline">
+                @auth
+                    <a href="{{ route('beli.show', ['product' => $item->id]) }}" class="group block bg-white rounded-4xl p-6 border border-gray-50 shadow-sm hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300 flex flex-col justify-between text-current no-underline">
+                @else
+                    <a href="{{ route('login') }}" class="group block bg-white rounded-4xl p-6 border border-gray-50 shadow-sm hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300 flex flex-col justify-between text-current no-underline">
+                @endauth
                     <div class="text-center mb-6">
                         <div class="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png"

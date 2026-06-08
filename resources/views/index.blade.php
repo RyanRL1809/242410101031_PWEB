@@ -21,50 +21,10 @@
                 <a href="#voucher" class="bg-[#5c7e10] hover:bg-[#78a315] text-white px-10 py-5 rounded-2xl font-black text-xl shadow-xl transition-all hover:-translate-y-1 active:scale-95">
                     BELI SEKARANG JUGA!
                 </a>
-                @auth
-                <a href="{{ url('/history') }}" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all">
-                    Cek Riwayat
-                </a>
-                @else
-                <a href="{{ route('login') }}" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all">
-                    Login untuk lihat riwayat
-                </a>
-                @endauth
             </div>
         </div>
     </section>
 
-    <section class="max-w-5xl mx-auto px-6 mt-[-40px] relative z-10">
-        <div class="bg-white rounded-[2rem] p-6 shadow-2xl border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-5">
-                <div class="bg-[#66c0f4]/10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl">
-                    🌤️
-                </div>
-                <div>
-                    <h2 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pantauan Cuaca Server</h2>
-
-                    <div id="weather-loading" class="text-sm italic text-gray-500 flex items-center gap-2">
-                        <svg class="animate-spin h-4 w-4 text-[#66c0f4]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Sinkronisasi satelit...
-                    </div>
-
-                    <div id="weather-data" class="hidden items-center gap-3">
-                        <h3 class="text-2xl font-black text-[#1b2838] tracking-tight" id="city-name">-</h3>
-                        <span class="text-gray-300">|</span>
-                        <p class="text-[#66c0f4] font-bold capitalize" id="weather-desc">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center md:text-right bg-gray-50 px-8 py-3 rounded-2xl w-full md:w-auto border border-gray-100">
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Suhu Udara</p>
-                <p class="text-3xl font-black text-[#5c7e10]"><span id="temperature">--</span>°C</p>
-            </div>
-        </div>
-    </section>
 
     <section id="voucher" class="max-w-7xl mx-auto px-6 py-24 scroll-mt-20">
         <div class="flex flex-col md:flex-row items-end justify-between mb-12 gap-4">
@@ -95,9 +55,15 @@
                     <p class="text-2xl font-black text-[#5c7e10]">Rp{{ number_format($produk->harga, 0, ',', '.') }}</p>
                 </div>
 
-                <a href="{{ url('/beli') }}" class="w-full bg-[#1b2838] hover:bg-[#66c0f4] text-white py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-[#66c0f4]/40">
-                    Beli Sekarang!
-                </a>
+                @auth
+                    <a href="{{ route('beli.show', ['product' => $produk->id]) }}" class="w-full bg-[#1b2838] hover:bg-[#66c0f4] text-white py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-[#66c0f4]/40">
+                        Beli Sekarang!
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="w-full bg-[#1b2838] hover:bg-[#66c0f4] text-white py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-[#66c0f4]/40">
+                        Beli Sekarang!
+                    </a>
+                @endauth
             </div>
             @empty
             <div class="md:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 text-center text-gray-400 font-medium">

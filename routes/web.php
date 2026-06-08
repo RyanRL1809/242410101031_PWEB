@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('products', ProductController::class);
+    Route::get('/admin/pelanggan', [PageController::class, 'customers'])->name('admin.users.index');
     Route::post('/history/{order}/status', [PageController::class, 'updateOrderStatus'])->name('history.updateStatus');
 
 });

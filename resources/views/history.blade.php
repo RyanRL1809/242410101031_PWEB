@@ -21,6 +21,7 @@
                 @php
                     $filters = [
                         'all' => 'Semua',
+                        'proses' => 'Proses',
                         'success' => 'Success',
                         'failed' => 'Failed',
                     ];
@@ -72,6 +73,10 @@
                                         @if($order->status == 'success')
                                             <span class="bg-green-100 text-green-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-green-200">
                                                 Success
+                                            </span>
+                                        @elseif($order->status == 'proses')
+                                            <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-yellow-200">
+                                                Proses
                                             </span>
                                         @elseif($order->status == 'pending')
                                             <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-3 py-1 rounded-full uppercase italic border border-yellow-200">

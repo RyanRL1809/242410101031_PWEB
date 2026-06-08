@@ -12,12 +12,8 @@ if (appDataEl) {
     const parsedProduk = JSON.parse(appDataEl.dataset.produk);
     const dataBarang = Array.isArray(parsedProduk) ? parsedProduk : (parsedProduk.data ?? []);
     const urlBeli = appDataEl.dataset.urlBeli;
-    const searchInput = document.getElementById('searchInput');
-    const filterStok = document.getElementById('filterStok');
-    const sortOrder = document.getElementById('sortOrder');
-    const productContainer = document.getElementById('productContainer');
-    const productCount = document.getElementById('productCount');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        const loginUrl = appDataEl.dataset.loginUrl;
+        const isAuth = appDataEl.dataset.isAuth === '1';
 
     const esc = (str) => String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -30,7 +26,10 @@ if (appDataEl) {
         return Number.isNaN(n) ? '0' : n.toLocaleString('id-ID');
     };
 
-    const buatKartu = (item) => `
+    const buatKartu = (item) => {
+        const href = isAuth ? `${urlBeli}/${esc(item.id)}` : loginUrl;
+
+        return `
         <div class="group bg-white rounded-4xl p-6 border border-gray-50 shadow-sm hover:shadow-xl hover:border-[#66c0f4]/20 transition-all duration-300 flex flex-col justify-between">
             <div class="text-center mb-6">
                 <div class="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform">
@@ -50,7 +49,7 @@ if (appDataEl) {
                     <p class="text-[9px] font-bold text-gray-400 uppercase">Saldo</p>
                     <p class="text-md font-black text-[#5c7e10]">${esc(item.nama_barang)}</p>
                 </div>
-                <a href="${urlBeli}/${esc(item.id)}"
+                <a href="${href}"
                    class="bg-gray-100 group-hover:bg-[#1b2838] text-gray-400 group-hover:text-white p-3 rounded-xl transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/>
@@ -59,6 +58,7 @@ if (appDataEl) {
             </div>
         </div>
     `;
+};
 
     const filterDanUrutkan = (items, keyword, hargaRange, sort) => {
         const kataKunci = keyword.toLowerCase();
@@ -162,12 +162,6 @@ if (appDataEl) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const weatherContainer = document.getElementById('weather-loading');
-
-    if (weatherContainer) {
-        fetchWeather();
-    }
-
     const historySearchInput = document.getElementById('historySearchInput');
     const historySearchForm = document.getElementById('historySearchForm');
     const historyTable = document.querySelector('table');
@@ -216,33 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-async function fetchWeather() {
-    const apiUrl = 'https://wttr.in/Jember?format=j1';
-
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Gagal koneksi ke API');
-
-        const data = await response.json();
-
-        const current = data.current_condition[0];
-        const area = data.nearest_area[0];
-
-        document.getElementById('city-name').innerText = area.areaName[0].value;
-        document.getElementById('temperature').innerText = current.temp_C;
-        document.getElementById('weather-desc').innerText = current.weatherDesc[0].value;
-
-        document.getElementById('weather-loading').classList.add('hidden');
-        const dataContainer = document.getElementById('weather-data');
-        dataContainer.classList.remove('hidden');
-        dataContainer.classList.add('flex');
-
-    } catch (error) {
-        console.error('Error cuaca:', error);
-        document.getElementById('weather-loading').innerHTML = '<span class="text-red-500 font-bold">Gagal memuat cuaca</span>';
-    }
-}
-
 window.setCookie = function(name, value, days = 30) {
     let expires = "";
     if (days) {
@@ -281,13 +248,21 @@ function applyFontSize(fontSize) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnToggle = document.getElementById('dark-mode-toggle');
+    const btnToggleMobile = document.getElementById('dark-mode-toggle-mobile');
+
+    const toggleDarkMode = () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        const newTheme = isDark ? 'dark' : 'light';
+        setCookie('theme', newTheme, 30);
+        localStorage.setItem('theme', newTheme);
+    };
+
     if (btnToggle) {
-        btnToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            const newTheme = isDark ? 'dark' : 'light';
-            setCookie('theme', newTheme, 30);
-            localStorage.setItem('theme', newTheme);
-        });
+        btnToggle.addEventListener('click', toggleDarkMode);
+    }
+
+    if (btnToggleMobile) {
+        btnToggleMobile.addEventListener('click', toggleDarkMode);
     }
 
     const prefForm = document.getElementById('preferences-form');

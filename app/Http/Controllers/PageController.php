@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -23,7 +24,7 @@ class PageController extends Controller
 
         $status = $request->query('status', 'all');
         $query = $request->query('q', '');
-        $allowedFilters = ['all', 'success', 'failed'];
+        $allowedFilters = ['all', 'proses', 'success', 'failed'];
         if (!in_array($status, $allowedFilters)) {
             $status = 'all';
         }
@@ -35,7 +36,7 @@ class PageController extends Controller
         }
 
         if ($status === 'all') {
-            $orders->whereIn('status', ['success', 'failed']);
+            $orders->whereIn('status', ['proses', 'success', 'failed']);
         } else {
             $orders->where('status', $status);
         }
@@ -53,6 +54,15 @@ class PageController extends Controller
         $orders = $orders->latest()->get();
 
         return view('history', compact('orders', 'status', 'query'));
+    }
+
+    public function customers()
+    {
+        $users = User::where('role', 'user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin-users', compact('users'));
     }
 
     public function updateOrderStatus(Request $request, Order $order)
@@ -139,9 +149,10 @@ class PageController extends Controller
 
         $product = null;
         $price = 0;
+        $productId = $validated['product_id'] ?? null;
 
-        if ($validated['product_id']) {
-            $product = Produk::find($validated['product_id']);
+        if ($productId) {
+            $product = Produk::find($productId);
             $price = $product ? $product->harga : 0;
         }
 
@@ -149,14 +160,16 @@ class PageController extends Controller
             return back()->withInput()->withErrors(['quantity' => 'Maaf, stok tidak cukup untuk jumlah pesanan ini.']);
         }
 
-        $order = DB::transaction(function () use ($validated, $product, $price) {
+        $productId = $validated['product_id'] ?? null;
+
+        $order = DB::transaction(function () use ($validated, $product, $price, $productId) {
             if ($product) {
                 $product->decrement('stok', $validated['quantity']);
             }
 
             return Order::create([
                 'user_id' => auth()->check() ? auth()->id() : null,
-                'product_id' => $validated['product_id'],
+                'product_id' => $productId,
                 'customer_name' => $validated['customer_name'],
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
@@ -164,7 +177,7 @@ class PageController extends Controller
                 'quantity' => $validated['quantity'],
                 'price' => $price,
                 'total' => $price * $validated['quantity'],
-                'status' => 'pending',
+                'status' => 'proses',
             ]);
         });
 
@@ -186,8 +199,7 @@ class PageController extends Controller
 
     public function completeOrder(Order $order)
     {
-        $order->update(['status' => 'success']);
-
+        // Keep status as proses until admin manually confirms the payment.
         return redirect()->route('beli.qris.success', ['order' => $order->id]);
     }
 
